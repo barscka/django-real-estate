@@ -7,6 +7,8 @@ mediafiles
 client/node_modules
 logs/
 *.log
+#sqlite
+*.sqlite
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
