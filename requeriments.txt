@@ -10,3 +10,4 @@ psycopg2-binary
 flake8==3.9.2
 black==21.6b0
 isort==5.9.3
+django-countries==7.2.1
