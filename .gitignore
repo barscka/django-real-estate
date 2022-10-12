@@ -5,6 +5,8 @@
 staticfiles
 mediafiles
 client/node_modules
+logs/
+*.log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
