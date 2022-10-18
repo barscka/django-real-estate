@@ -60,7 +60,7 @@ class UpdateProfileAPIView(APIView):
         except Profile.DoesNotExist:
             raise ProfileNotFound
         user_name = request.user.username
-        if user_name != request.user_name:
+        if user_name != username:
             raise NotYourProfile
         
         data = request.data
