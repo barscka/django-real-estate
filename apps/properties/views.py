@@ -1,6 +1,4 @@
 import logging
-import logging
-
 
 import django_filters
 from django.db.models import query
@@ -10,34 +8,33 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .exceptions import PropertyNOtFound
+from .exceptions import PropertyNotFound
 from .models import Property, PropertyViews
-from .pagination import PageNumberPagination, PropertyPagination
-from .serializers import (
-    PropertyCreateSerializer, PropertySerializer, PropertyViewSerializer
-)
+from .pagination import PropertyPagination
+from .serializers import (PropertyCreateSerializer, PropertySerializer,
+                          PropertyViewSerializer)
+
 logger = logging.getLogger(__name__)
 
+
 class PropertyFilter(django_filters.FilterSet):
-    
+
     advert_type = django_filters.CharFilter(
         field_name="advert_type", lookup_expr="iexact"
     )
-    
+
     property_type = django_filters.CharFilter(
         field_name="property_type", lookup_expr="iexact"
     )
+
     price = django_filters.NumberFilter()
-    price_gt = django_filters.NumberFilter(
-        field_name="price", lookup_expr="gt"
-    )
-    price_lt = django_filters.NumberFilter(
-        field_name="price", lookup_expr="lt"
-    )
+    price__gt = django_filters.NumberFilter(field_name="price", lookup_expr="gt")
+    price__lt = django_filters.NumberFilter(field_name="price", lookup_expr="lt")
     
     class Meta:
         model = Property
-        fields = ["advert_type", "property_type","price"]
+        fields = ["advert_type", "property_type", "price"]
+     
         
 class ListAllPropertiesAPIView(generics.ListAPIView):
     serializer_class = PropertySerializer
@@ -48,13 +45,14 @@ class ListAllPropertiesAPIView(generics.ListAPIView):
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
-    
+
     filterset_class = PropertyFilter
     search_fields = ["country", "city"]
     ordering_fields = ["created_at"]
-    
+
+
 class ListAgentsPropertiesAPIView(generics.ListAPIView):
-    
+
     serializer_class = PropertySerializer
     pagination_class = PropertyPagination
     filter_backends = [
@@ -68,11 +66,11 @@ class ListAgentsPropertiesAPIView(generics.ListAPIView):
     
     def get_queryset(self):
         user = self.request.user
-        queryset = Property.objects.filter(user=user).order_by("=created_at")
+        queryset = Property.objects.filter(user=user).order_by("-created_at")
         return queryset
     
 class PropertyViewsAPIViews(generics.ListAPIView):
-    serializer_class = PropertySerializer
+    serializer_class = PropertyViewSerializer
     queryset = PropertyViews.objects.all()
     
 class PropertyDetailView(APIView):
@@ -100,7 +98,7 @@ def update_property_api_view(request, slug):
     try:
         property = Property.objects.get(slug=slug)
     except Property.DoesNotExist:
-        raise PropertyNOtFound
+        raise PropertyNotFound
     
     user = request.user
     if property.user != user:
@@ -121,6 +119,7 @@ def create_property_api_view(request):
     user = request.user
     data = request.data
     data["user"] = request.user.pkid
+    serializer = PropertyCreateSerializer(data=data)
     
     if serializer.is_valid():
         serializer.save()
@@ -128,7 +127,8 @@ def create_property_api_view(request):
             f"property {serializer.data.get('title')} created by {user.username}"
         )
         return Response(serializer.data)
-    return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
+    print(   f"country  {serializer.data.get('country')} created by {user.username}")
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])        
 @permission_classes([permissions.IsAuthenticated])
@@ -136,7 +136,7 @@ def delete_property_api_view(request, slug):
     try:
         property = Property.objects.get(slug=slug)
     except Property.DoesNotExist:
-        raise PropertyNOtFound
+        raise PropertyNotFound
     
     user = request.user
     if property.user != user:
