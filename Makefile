@@ -16,6 +16,8 @@ down:
 
 show-logs:
 	docker-compose logs
+all-logs:
+	docker-compose logs -f
 
 makemigrations:
 	docker-compose exec api python3 manage.py makemigrations
