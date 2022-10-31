@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -o errexit
+
+set -o pipefail
+set -o nounset
+
+python3 manage.py migrate --no-input
+python3 manage.py collectstatic --no-input
+python3 manage.py createcachetable
+
+# cria o usuario admin na primeira execucao do docker build
+if [ "$DJANGO_SUPERUSER_USERNAME" ]
+then
+    python3 manage.py createsuperuser \
+        --noinput \
+        --username $DJANGO_SUPERUSER_USERNAME \
+        --email $DJANGO_SUPERUSER_EMAIL \
+        --first_name $DJANGO_SUPERUSER_FIRST_NAME \
+        --last_name $DJANGO_SUPERUSER_LAST_NAME
+fi
+
+$@
+python3 manage.py runserver 0.0.0.0:8000
