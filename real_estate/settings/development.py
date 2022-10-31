@@ -13,21 +13,21 @@ DEFAULT_FROM_EMAIL="alissonof@uol.com.br"
 DOMAIN=env("DOMAIN")
 SITE_NAME="REAL ESTATE"
 
+# DATABASES = {
+#     "default": {
+#     'ENGINE': 'django.db.backends.sqlite3',
+#     'NAME': os.path.join(SITE_ROOT, 'database.sqlite')
+#     }
+# }
+
+
 DATABASES = {
-    "default": {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(SITE_ROOT, 'database.sqlite')
-    }
+   "default": {
+       "ENGINE": env("POSTGRES_ENGINE"),
+       "NAME": env("POSTGRES_DB"),
+       "USER": env("POSTGRES_USER"),
+       "PASSWORD": env("POSTGRES_PASSWORD"),
+       "HOST": env("PG_HOST"),
+       "PORT": env("PG_PORT"),
+   }
 }
-
-
-#DATABASES = {
-#    "default": {
-#        "ENGINE": env("POSTGRES_ENGINE"),
-#        "NAME": env("POSTGRES_DB"),
-#        "USER": env("POSTGRES_USER"),
-#        "PASSWORD": env("POSTGRES_PASSWORD"),
-#        "HOST": env("PG_HOST"),
-#        "PORT": env("PG_PORT"),
-#    }
-#}
