@@ -6,3 +6,9 @@ extend-exclude = '''
     | dist
 )/
 '''
+
+[tool.isort]
+default_section = "THIRDPARTY"
+force_single_line = true
+line_length = 99
+skip_glob = ["**/.env*", "**/env/*", "**/.venv/*", "**/docs/*"]
