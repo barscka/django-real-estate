@@ -14,7 +14,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(read_only=True)
     country = CountryField(name_only=True)
     reviews = serializers.SerializerMethodField(read_only=True)
-    
+
     class Meta:
         model = Profile
         fields = [
@@ -79,4 +79,3 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
         if instance.top_agent:
             representation["top_agent"] = True
         return representation
-    

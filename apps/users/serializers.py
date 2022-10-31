@@ -6,6 +6,7 @@ from rest_framework import serializers
 
 User = get_user_model()
 
+
 class UserSerializer(serializers.ModelSerializer):
     gender = serializers.CharField(source="profile.gender")
     phone_number = PhoneNumberField(source="profile.phone_number")
@@ -17,28 +18,38 @@ class UserSerializer(serializers.ModelSerializer):
     last_name = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField(source="get_full_name")
 
-
     class Meta:
         models = User
-        field = ['id','username','email','first_name','last_name', 'full_name', 'gender',
-                 'phone_number', 'profile_photo','country','top_seller',
-                 ]
-        
+        field = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "full_name",
+            "gender",
+            "phone_number",
+            "profile_photo",
+            "country",
+            "top_seller",
+        ]
+
         def get_first_name(self, obj):
             return obj.first_name.title()
 
         def get_last_name(self, obj):
-            return obj.last_name;title()    
+            return obj.last_name
+            title()
 
         def to_representation(self, instance):
             representation = super(UserSerializer, self).to_representation(instance)  # type: ignore
-            
+
             if instance.is_superuser:
                 representation["admin"] = True
             return representation
 
+
 class CreateUserSeriealizer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
-        fields = ["id","username", "email", "first_name", "last_name", "password"]
-
+        fields = ["id", "username", "email", "first_name", "last_name", "password"]
