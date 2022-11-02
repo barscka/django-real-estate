@@ -9,4 +9,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "real_estate.settings.developmen
 app = Celery("real_estate")
 
 app.config_from_object("real_estate.settings.development", namespace="CELERY"),
-app.autodiscover(lambda: base.INSTALLED_APPS)
+app.autodiscover_tasks(lambda: base.INSTALLED_APPS)
