@@ -21,6 +21,8 @@ services:
       - estate-react
   
   client:
+    environment:
+    - CHOKIDAR_USEPOLLING=true
     build: 
       context: ./client
       dockerfile: ./docker/local/Dockerfile
