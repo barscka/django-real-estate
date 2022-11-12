@@ -11,7 +11,7 @@ WORKDIR ${APP_HOME}
 # Adicionando `/app/node_modules/.bin` para o $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
-COPY ./package*.json .
+COPY ./package*.json ./
 
 # To Fix Permissions for Packages
 RUN npm install 
